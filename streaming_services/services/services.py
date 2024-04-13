@@ -2,7 +2,7 @@
 import random
 import time
 
-from flask import Flask, Response, request, json, stream_with_context
+from flask import Flask, Response, request, json, stream_with_context, jsonify
 
 app = Flask("streaming")
 
@@ -49,5 +49,28 @@ def predict():
     return stream_with_context(generate_predictions(), mimetype="application/jsonl")
 
 
+@app.get("/negotiate")
+def negotiate():
+    # Negotiate the content type
+    if "text/plain" in request.accept_mimetypes:
+        def stream():
+            for i in range(100):
+                yield f"Data point {i}\n"
+
+        return Response(stream(), mimetype="text/plain")
+    # Can be called with curl -H "Accept: application/jsonl" http://localhost:8080/negotiate
+    if "application/jsonl" in request.accept_mimetypes:
+        def stream_jsonl():
+            for i in range(100):
+                yield f'{{"data": {i}}}\n'
+
+        return Response(stream_jsonl(), mimetype="application/jsonl")
+
+    if "application/json" in request.accept_mimetypes:
+        return jsonify([{"data": i} for i in range(100)])
+
+    raise Exception("No supported content type")
+
+
 if __name__ == '__main__':
-    app.run(port=8080)
+    app.run(port=8080, debug=True)
