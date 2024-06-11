@@ -35,11 +35,27 @@ jobs:
         pip install build
     - name: Build package
       run: python -m build
-    - name: Publish package
+    - name: Get the version
+      id: get_version
+      run: echo "::set-output name=VERSION::$(python setup.py --version)"
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
-      run: |
-        version=$(python setup.py --version)
-        mkdir -p release
-        cp dist/* release/
-        gh release create "$version" release/* -t "Release $version" -n "Release $version"
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ steps.get_version.outputs.VERSION }}
+        release_name: Release ${{ steps.get_version.outputs.VERSION }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist/*
+        asset_name: your_package-${{ steps.get_version.outputs.VERSION }}.whl
+        asset_content_type: application/zip
