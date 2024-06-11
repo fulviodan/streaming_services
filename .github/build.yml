@@ -13,9 +13,9 @@ on:
     tags:
     - '*'
 permissions:
-      contents: write
-      pull-requests: write
-      repository-projects: write
+  contents: write
+  pull-requests: write
+  repository-projects: write
 
 jobs:
   deploy:
@@ -37,7 +37,7 @@ jobs:
       run: python -m build
     - name: Publish package
       env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         version=$(python setup.py --version)
         mkdir -p release
