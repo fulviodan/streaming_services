@@ -38,16 +38,3 @@ jobs:
     - name: Get the version
       id: get_version
       run: echo "::set-output name=VERSION::$(python setup.py --version)"
-
-    - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
-      with:
-        tag_name: v${{ steps.get_version.outputs.VERSION }}
-        release_name: Release ${{ steps.get_version.outputs.VERSION }}
-        draft: false
-        prerelease: false
-
-   
