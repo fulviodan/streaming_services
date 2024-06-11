@@ -1,3 +1,5 @@
+import io
+
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import StreamingResponse, JSONResponse
 import random
@@ -5,6 +7,16 @@ import time
 import json
 
 app = FastAPI()
+
+
+async def read_lines(stream):
+    buffer = ""
+    async for chunk in stream:
+        buffer += chunk.decode()
+        lines = buffer.split("\n")
+        for line in lines[:-1]:
+            yield line + "\n"
+        buffer = lines[-1]
 
 
 def generate_plain():
@@ -30,8 +42,8 @@ def stream_jsonl():
 @app.post("/predict")
 async def predict(request: Request):
     async def generate_predictions():
-        async for line in request.stream():
-            line = line.decode().strip()
+        async for line in read_lines(request.stream()):
+            line = line.strip()
             if line:
                 d = json.loads(line)
                 time.sleep(0.1)

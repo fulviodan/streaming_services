@@ -46,7 +46,7 @@ def predict():
                 d['prediction'] = random.choice([0, 1])
                 yield json.dumps(d) + "\n"
 
-    return stream_with_context(generate_predictions(), mimetype="application/jsonl")
+    return stream_with_context(generate_predictions())
 
 
 @app.get("/negotiate")
