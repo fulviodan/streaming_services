@@ -9,8 +9,8 @@
 name: Upload Python Package
 
 on:
-  push:
-    tags:
+  push: 
+    branches:
     - '*'
 permissions:
   contents: write
@@ -43,7 +43,7 @@ jobs:
       id: create_release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.OKEN }}
       with:
         tag_name: v${{ steps.get_version.outputs.VERSION }}
         release_name: Release ${{ steps.get_version.outputs.VERSION }}
