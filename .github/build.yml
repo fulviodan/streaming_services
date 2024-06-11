@@ -37,7 +37,7 @@ jobs:
       run: python -m build
     - name: Publish package
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
       run: |
         version=$(python setup.py --version)
         mkdir -p release
