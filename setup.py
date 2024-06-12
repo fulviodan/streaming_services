@@ -11,7 +11,7 @@ setuptools.setup(
     name="streaming_services",
     version=version,
     author="Live Tech",
-    author_email="f.dantonio@ilivetech.it",
+    author_email="f.dantonio@eilivetech.it",
     description="",
     long_description="",
     python_requires='>3.5.0',
