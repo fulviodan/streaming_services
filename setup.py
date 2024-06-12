@@ -5,7 +5,7 @@ def get_requirements():
 
 import json
 ppom=json.load(open("./ppom.json"))
-version=ppom['version']
+version=None
 
 setuptools.setup(
     name="streaming_services",
